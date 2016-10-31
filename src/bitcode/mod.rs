@@ -10,7 +10,6 @@
 // LLVM-C headers BitReader.h and BitWriter.h
 
 use std::ffi::CString;
-use std::os::unix::io::RawFd;
 
 use libc::c_int;
 

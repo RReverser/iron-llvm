@@ -23,7 +23,7 @@ use ::{LLVMRef, LLVMRefCtor};
 use core::basic_block::{BasicBlock, BasicBlocksIter};
 use core::context::Context;
 use core::module;
-use core::types::{Type, IntType, FunctionType, RealType, StructType};
+use core::types::{Type, IntType, FunctionType, RealType, StructType, VectorType};
 
 pub trait ValueCtor : LLVMRefCtor<LLVMValueRef> {}
 
@@ -309,6 +309,25 @@ new_ref_type!(StructConstRef for LLVMValueRef
               ValueCtor,
               ConstCtor<StructType>,
               StructConstCtor,
+              StructConst
+              );
+
+pub trait VectorConstCtor : ConstCtor<VectorType> {
+    fn get(vals: &mut [LLVMValueRef]) -> Self {
+        unsafe {
+            Self::from_ref(LLVMConstVector(vals.as_mut_ptr(), vals.len() as c_uint))
+        }
+    }
+}
+
+new_ref_type!(VectorConstRef for LLVMValueRef
+              implementing
+              Value,
+              User,
+              Const,
+              ValueCtor,
+              ConstCtor<VectorType>,
+              VectorConstCtor,
               StructConst
               );
 
